@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,20 +11,26 @@ namespace FilmsCatalog.ViewModels
     {
         public int Id { get; set; }
 
-        [Display(Name = "Название")]
+        [Required(ErrorMessage = "Обязательное поле")]
+        [Display(Name = "Название*")]
 
         public string Name { get; set; }
 
-        [Display(Name = "Описание")]
+        [Required(ErrorMessage = "Обязательное поле")]
+        [Display(Name = "Описание*")]
         public string Description { get; set; }
 
-        [Display(Name = "Год выауска")]
+        [Required(ErrorMessage = "Обязательное поле")]
+        [Display(Name = "Год выпуска*")]
         public DateTime Year { get; set; }
 
         [Display(Name = "Режиссёр")]
         public string Director { get; set; }
 
         [Display(Name = "Постер")]
-        public byte[] Poster { get; set; }
+        public string PosterFileName { get; set; }
+
+        [Display(Name = "Постер")]
+        public IFormFile PosterImage { get; set; }
     }
 }

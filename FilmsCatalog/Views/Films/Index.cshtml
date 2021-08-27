@@ -1,56 +1,65 @@
-﻿@model ReflectionIT.Mvc.Paging.PagingList<FilmsCatalog.ViewModels.FilmForTableViewModel>
-@using ReflectionIT.Mvc.Paging
-@addTagHelper*,ReflectionIT.Mvc.Paging
+﻿@model cloudscribe.Pagination.Models.PagedResult<FilmsCatalog.ViewModels.FilmForTableViewModel>
+@addTagHelper "*, cloudscribe.Web.Pagination"
 
 @{
     ViewData["Title"] = "Index";
 }
 
-@*<nav aria-label="Films">
-	<vc:pager paging-list="@Model" />
-</nav>*@
-
 <p>
-	<a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New</a>
 </p>
 
 <table class="table">
-	<thead>
-	<tr>
-		<th>
-			@Html.DisplayNameFor(model => model.Name)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Year)
-		</th>
-		<th>
-			@Html.DisplayNameFor(model => model.Director)
-		</th>
-		<th></th>
-	</tr>
-	</thead>
-	<tbody>
-	@foreach (var item in Model) {
-		<tr>
-			<td>
-				@Html.DisplayFor(modelItem => item.Name)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.Year)
-			</td>
-			<td>
-				@Html.DisplayFor(modelItem => item.Director)
-			</td>
-			<td>
-				<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-				<a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-				<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-			</td>
-		</tr>
-	}
-	</tbody>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Data[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Data[0].Year)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Data[0].Director)
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Data)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Director)
+                </td>
+                <td>
+                    @if (@item.CanEdit)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
-<nav aria-label="Films">
-	<vc:pager paging-list="@Model"/>
-</nav>
+<cs-pager cs-paging-pagesize="@Model.PageSize"
+          cs-paging-pagenumber="@Model.PageNumber"
+          cs-paging-totalitems="@Model.TotalItems"
+          cs-pagenumber-param="pageNumber"
+          asp-controller="Films"
+          asp-action="Index"
+          cs-pager-li-current-class="page-item active"
+cs-pager-li-other-class="page-item"
+cs-pager-li-non-active-class="page-item disabled"
+cs-pager-link-current-class="page-link"
+cs-pager-link-other-class="page-link"></cs-pager>

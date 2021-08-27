@@ -14,7 +14,6 @@ namespace FilmsCatalog.ViewModels
         public int Id { get; set; }
 
         [Display(Name = "Название")]
-
         public string Name { get; set; }
 
         [Display(Name = "Год выпуска")]
@@ -22,6 +21,8 @@ namespace FilmsCatalog.ViewModels
 
         [Display(Name = "Режиссёр")]
         public string Director { get; set; }
+
+        public string CreateUserId { get; set; }
 
         public bool CanEdit { get; set; }
     }

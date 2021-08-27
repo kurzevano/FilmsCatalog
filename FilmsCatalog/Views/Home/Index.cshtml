@@ -5,11 +5,5 @@
 
 <div class="text-center">
     <h1 class="display-4">Добро пожаловать!</h1>
-    @*@if (!SignInManager.IsSignedIn(User))*@
-    {
-<a asp-controller="Films" asp-action="Index">Перейти в каталог</a>}
-    else
-    { @*<partial name="Films" />*@
-
-    }
+    <h4>Для просмотра каталога фильмов необходимо <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="SignIn">войти в систему</a></h4>
 </div>

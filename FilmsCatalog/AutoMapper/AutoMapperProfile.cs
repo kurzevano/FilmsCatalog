@@ -12,11 +12,14 @@ namespace FilmsCatalog.AutoMapper
     {
         public AutoMapperProfile()
         {
-            CreateMap<Film, FilmForTableViewModel>();
             CreateMap<FilmForTableViewModel, Film>();
 
+            CreateMap<Film, FilmForTableViewModel>()
+                .ForMember(dest => dest.CanEdit, source => source.MapFrom<CanEditFilmResolver>());
+
             CreateMap<Film, FilmViewModel>();
-            CreateMap<FilmViewModel, Film>();
+            CreateMap<FilmViewModel, Film>()
+                .ForMember(dest => dest.UserId, source => source.MapFrom<UserIdResolver>());
         }
     }
 }
