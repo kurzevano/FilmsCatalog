@@ -18,8 +18,7 @@ namespace FilmsCatalog.AutoMapper
                 .ForMember(dest => dest.CanEdit, source => source.MapFrom<CanEditFilmResolver>());
 
             CreateMap<Film, FilmViewModel>();
-            CreateMap<FilmViewModel, Film>()
-                .ForMember(dest => dest.UserId, source => source.MapFrom<UserIdResolver>());
+            CreateMap<FilmViewModel, Film>();
         }
     }
 }

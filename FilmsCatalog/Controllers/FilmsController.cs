@@ -101,19 +101,30 @@ namespace FilmsCatalog.Controllers
 
         private string UploadFile(FilmViewModel filmViewModel)
         {
-            var fileName = string.Empty;
-            if (filmViewModel.PosterImage != null)
+            if (filmViewModel.PosterImage == null)
             {
-                string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
-                fileName = Guid.NewGuid().ToString() + "-" + filmViewModel.PosterImage.FileName;
-                string filePath = Path.Combine(uploadDir, fileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    filmViewModel.PosterImage.CopyTo(fileStream);
-                }
+                return filmViewModel.PosterFileName;
             }
 
-            return fileName;
+            var newFileName = string.Empty;
+            string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
+            newFileName = Guid.NewGuid().ToString() + "-" + filmViewModel.PosterImage.FileName;
+            string filePath = Path.Combine(uploadDir, newFileName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                filmViewModel.PosterImage.CopyTo(fileStream);
+            }
+
+            if (filmViewModel.PosterFileName != null)
+            {
+                var oldFileName = Path.Combine(uploadDir, filmViewModel.PosterFileName);
+                if (System.IO.File.Exists(oldFileName))
+                {
+                    System.IO.File.Delete(oldFileName);
+                } 
+            }
+
+            return newFileName;
         }
 
         // GET: Films/Edit/5
@@ -130,7 +141,9 @@ namespace FilmsCatalog.Controllers
                 return NotFound();
             }
 
-            return View(_mapper.Map<FilmViewModel>(film));
+            var filmViewModel = _mapper.Map<FilmViewModel>(film);
+
+            return View(filmViewModel);
         }
 
         // POST: Films/Edit/5
@@ -138,9 +151,9 @@ namespace FilmsCatalog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Year,Director,PosterImage")] FilmViewModel film)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Year,Director,PosterFileName,PosterImage")] FilmViewModel filmViewModel)
         {
-            if (id != film.Id)
+            if (id != filmViewModel.Id)
             {
                 return NotFound();
             }
@@ -149,15 +162,17 @@ namespace FilmsCatalog.Controllers
             {
                 try
                 {
-                    string fileName = UploadFile(film);
-                    film.PosterFileName = fileName;
+                    string fileName = UploadFile(filmViewModel);
+                    filmViewModel.PosterFileName = fileName;
+                    var film = _mapper.Map<Film>(filmViewModel);
+                    film.UserId = _signInManager.UserManager.GetUserId(User);
 
-                    _context.Update(_mapper.Map<Film>(film));
+                    _context.Update(film);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FilmExists(film.Id))
+                    if (!FilmExists(filmViewModel.Id))
                     {
                         return NotFound();
                     }
@@ -169,7 +184,7 @@ namespace FilmsCatalog.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(film);
+            return View(filmViewModel);
         }
 
         // GET: Films/Delete/5

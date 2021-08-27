@@ -2,6 +2,7 @@
 using FilmsCatalog.Models;
 using FilmsCatalog.ViewModels;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +12,15 @@ namespace FilmsCatalog.AutoMapper
 {
     public class UserIdResolver : IValueResolver<FilmViewModel, Film, string>
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public UserIdResolver(IHttpContextAccessor httpContextAccessor)
+        private readonly SignInManager<User> _signInManager;
+        public UserIdResolver(SignInManager<User> signInManager)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _signInManager = signInManager;
         }
 
         public string Resolve(FilmViewModel source, Film destination, string destMember, ResolutionContext context)
         {
-            return _httpContextAccessor?.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value;
+            return _signInManager.UserManager.GetUserId(System.Security.Claims.ClaimsPrincipal.Current);
         }
     }
 }
