@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FilmsCatalog.Interfaces;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FilmsCatalog.ViewModels
 {
-    public class FilmViewModel
+    public class FilmViewModel : IImageContainer
     {
         public int Id { get; set; }
 
@@ -22,15 +23,11 @@ namespace FilmsCatalog.ViewModels
 
         [Required(ErrorMessage = "Обязательное поле")]
         [Display(Name = "Год выпуска*")]
-        public DateTime Year { get; set; }
+        public short Year { get; set; }
 
         [Display(Name = "Режиссёр")]
         public string Director { get; set; }
-
-        [Display(Name = "Постер")]
-        public string PosterFileName { get; set; }
-
-        [Display(Name = "Постер")]
-        public IFormFile PosterImage { get; set; }
+        public IFormFile Image { get; set; }
+        public string ImageFileName { get; set; }
     }
 }

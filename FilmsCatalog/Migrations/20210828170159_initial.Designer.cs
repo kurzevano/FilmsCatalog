@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FilmsCatalog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210825191543_added-user")]
-    partial class addeduser
+    [Migration("20210828170159_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,9 +28,6 @@ namespace FilmsCatalog.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CreateUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -40,15 +37,18 @@ namespace FilmsCatalog.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte[]>("Poster")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("PosterFileName")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Year")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreateUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Film");
                 });
@@ -262,7 +262,7 @@ namespace FilmsCatalog.Migrations
                 {
                     b.HasOne("FilmsCatalog.Models.User", "CreateUser")
                         .WithMany()
-                        .HasForeignKey("CreateUserId");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("CreateUser");
                 });

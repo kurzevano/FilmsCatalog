@@ -17,8 +17,11 @@ namespace FilmsCatalog.AutoMapper
             CreateMap<Film, FilmForTableViewModel>()
                 .ForMember(dest => dest.CanEdit, source => source.MapFrom<CanEditFilmResolver>());
 
-            CreateMap<Film, FilmViewModel>();
-            CreateMap<FilmViewModel, Film>();
+            CreateMap<Film, FilmViewModel>()
+                .ForMember(dest => dest.ImageFileName, source => source.MapFrom(film => film.PosterFileName));
+
+            CreateMap<FilmViewModel, Film>()
+                .ForMember(dest => dest.PosterFileName, source => source.MapFrom(film => film.ImageFileName)); ;
         }
     }
 }

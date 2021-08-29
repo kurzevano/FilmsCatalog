@@ -15,7 +15,7 @@ namespace FilmsCatalog.Models
 
 		public string Description { get; set; }
 
-		public DateTime Year { get; set; }
+		public int Year { get; set; }
 
 		public string Director { get; set; }
 

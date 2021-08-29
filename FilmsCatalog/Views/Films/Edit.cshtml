@@ -19,7 +19,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"></textarea>
+                <textarea asp-for="Description" class="form-control" rows="6"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -34,11 +34,10 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="PosterImage" class="control-label"></label>
-                <img src="~/Images/@Model.PosterFileName" />
-                <input asp-for="PosterImage" type="file" class="form-control" />
-                <span asp-validation-for="PosterImage" class="text-danger"></span>
-                <input asp-for="PosterFileName" hidden class="form-control" />
+                <img src="~/Images/@Model.ImageFileName" />
+                <input asp-for="Image" type="file" class="form-control" />
+                <span asp-validation-for="Image" class="text-danger"></span>
+                <input asp-for="ImageFileName" hidden class="form-control" />
             </div>
 
             <div class="form-group">

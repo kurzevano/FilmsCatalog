@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FilmsCatalog.AutoMapper;
 using System.Net;
+using FilmsCatalog.FileManager;
+using FilmsCatalog.Interfaces;
 
 namespace FilmsCatalog
 {
@@ -54,6 +56,8 @@ namespace FilmsCatalog
 
             services.AddAutoMapper(typeof(AutoMapperProfile));
             services.AddCloudscribePagination();
+            services.AddSingleton(typeof(IFileManager), typeof(FilmsCatalog.FileManager.FileManager));
+            services.AddSingleton(typeof(IFilePathResolver), typeof(WwwRootImagesPathResolver));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

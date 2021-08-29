@@ -17,6 +17,7 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using cloudscribe.Pagination.Models;
 using System.Threading;
+using FilmsCatalog.FileManager;
 
 namespace FilmsCatalog.Controllers
 {
@@ -26,13 +27,16 @@ namespace FilmsCatalog.Controllers
         private readonly IMapper _mapper;
         private readonly SignInManager<User> _signInManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IFileManager _fileManager;
 
-        public FilmsController(ApplicationDbContext context, IMapper mapper, SignInManager<User> signInManager, IWebHostEnvironment webHostEnvironment)
+        public FilmsController(ApplicationDbContext context, IMapper mapper, SignInManager<User> signInManager, IWebHostEnvironment webHostEnvironment, IFileManager fileManager
+            )
         {
             _context = context;
             this._mapper = mapper;
             _signInManager = signInManager;
             this._webHostEnvironment = webHostEnvironment;
+            this._fileManager = fileManager;
         }
 
         [Authorize]
@@ -89,7 +93,7 @@ namespace FilmsCatalog.Controllers
                 var newFilm = _mapper.Map<Film>(film);
                 newFilm.UserId = _signInManager.UserManager.GetUserId(User);
 
-                string fileName = UploadFile(film);
+                string fileName = _fileManager.Upload(film);
                 newFilm.PosterFileName = fileName;
 
                 _context.Add(newFilm);
@@ -97,34 +101,6 @@ namespace FilmsCatalog.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(film);
-        }
-
-        private string UploadFile(FilmViewModel filmViewModel)
-        {
-            if (filmViewModel.PosterImage == null)
-            {
-                return filmViewModel.PosterFileName;
-            }
-
-            var newFileName = string.Empty;
-            string uploadDir = Path.Combine(_webHostEnvironment.WebRootPath, "Images");
-            newFileName = Guid.NewGuid().ToString() + "-" + filmViewModel.PosterImage.FileName;
-            string filePath = Path.Combine(uploadDir, newFileName);
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
-            {
-                filmViewModel.PosterImage.CopyTo(fileStream);
-            }
-
-            if (filmViewModel.PosterFileName != null)
-            {
-                var oldFileName = Path.Combine(uploadDir, filmViewModel.PosterFileName);
-                if (System.IO.File.Exists(oldFileName))
-                {
-                    System.IO.File.Delete(oldFileName);
-                } 
-            }
-
-            return newFileName;
         }
 
         // GET: Films/Edit/5
@@ -151,7 +127,7 @@ namespace FilmsCatalog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Year,Director,PosterFileName,PosterImage")] FilmViewModel filmViewModel)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Year,Director,ImageFileName,Image")] FilmViewModel filmViewModel)
         {
             if (id != filmViewModel.Id)
             {
@@ -162,8 +138,8 @@ namespace FilmsCatalog.Controllers
             {
                 try
                 {
-                    string fileName = UploadFile(filmViewModel);
-                    filmViewModel.PosterFileName = fileName;
+                    string fileName = _fileManager.Upload(filmViewModel);
+                    filmViewModel.ImageFileName = fileName;
                     var film = _mapper.Map<Film>(filmViewModel);
                     film.UserId = _signInManager.UserManager.GetUserId(User);
 
@@ -213,6 +189,8 @@ namespace FilmsCatalog.Controllers
             var film = await _context.Film.FindAsync(id);
             _context.Film.Remove(film);
             await _context.SaveChangesAsync();
+            var filmViewModel = _mapper.Map<FilmViewModel>(film);
+            _fileManager.Delete(filmViewModel);
             return RedirectToAction(nameof(Index));
         }
 

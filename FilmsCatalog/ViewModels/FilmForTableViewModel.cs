@@ -17,7 +17,7 @@ namespace FilmsCatalog.ViewModels
         public string Name { get; set; }
 
         [Display(Name = "Год выпуска")]
-        public DateTime Year { get; set; }
+        public short Year { get; set; }
 
         [Display(Name = "Режиссёр")]
         public string Director { get; set; }

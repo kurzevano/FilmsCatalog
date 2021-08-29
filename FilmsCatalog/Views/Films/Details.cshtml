@@ -8,44 +8,41 @@
     <h4>Информация о фильме</h4>
     <hr />
     <div class="row">
-        <div class="col-sm">
-            <img src="~/Images/@Model.PosterFileName"  width="500" />
+        @if (@Model.ImageFileName!=null)
+        {
+        <div class="col-auto">
+            <img src="~/Images/@Model.ImageFileName" max-width="500" />
         </div>
-        <div class="col-sm">
+        }
+        <div class="col">
             <dl class="row">
-                <dt class="col-sm-2">
+                <dt class="col-sm-3">
                     @Html.DisplayNameFor(model => model.Name)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-9">
                     @Html.DisplayFor(model => model.Name)
                 </dd>
-                <dt class="col-sm-2">
+                <dt class="col-sm-3">
                     @Html.DisplayNameFor(model => model.Description)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-9">
                     @Html.DisplayFor(model => model.Description)
                 </dd>
-                <dt class="col-sm-2">
+                <dt class="col-sm-3">
                     @Html.DisplayNameFor(model => model.Year)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-9">
                     @Html.DisplayFor(model => model.Year)
                 </dd>
-                <dt class="col-sm-2">
+                <dt class="col-sm-3">
                     @Html.DisplayNameFor(model => model.Director)
                 </dt>
-                <dd class="col-sm-10">
+                <dd class="col-sm-9">
                     @Html.DisplayFor(model => model.Director)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.PosterFileName)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.PosterFileName)
                 </dd>
             </dl>
         </div>
-        </div>
+    </div>
         <div>
             <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
             <a asp-action="Index">Back to List</a>
